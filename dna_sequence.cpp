@@ -12,18 +12,20 @@ void DnaSequence::loadDnaFromFile(const std::string & name)
 	}
 	else
 	{	
-		std::cout << "Loaded";
-		/*
 		std::string line;
-		while (std::getline(infile, line))
-		this = text + line + '\n';
-		*/
+		while (infile >> line)
+			this->dna += line;
 	}
 	
 }
 
 DnaSequence::DnaSequence()
 {
+}
+
+DnaSequence::DnaSequence(const std::string & name)
+{
+	this->loadDnaFromFile(name);
 }
 
 
