@@ -5,8 +5,9 @@
 #include "dna_oligonucleotides.hpp"
 
 const int K_MER_LENGTH = 5;
-const int DNA_LENGTH = 20;
-const int DNA_TEMPERATURE = 6;
+const int DNA_LENGTH = 100;
+const int DNA_TEMPERATURE = 8;
+
 
 int main(int argc, const char * argv[]) {
 

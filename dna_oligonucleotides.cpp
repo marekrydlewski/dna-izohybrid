@@ -1,4 +1,7 @@
+
 #include "dna_oligonucleotides.hpp"
+#include "oligo_numbers.hpp"
+
 
 void DnaOligonucleotides::generateScatteredMap()
 {
