@@ -13,6 +13,10 @@ std::vector<std::string *> Graph::chop(std::string data, int k) {
     return partial;
 }
 
+/*
+ * deprecated - we need to create algorithm for izotermic sequencing :(
+ */
+
 Graph::Graph(std::string data, int k) {
     auto partial = this->chop(data, k);
     for (auto it = partial.begin() ; it != partial.end(); ++it) {
@@ -45,6 +49,53 @@ Graph::Graph(std::string data, int k) {
         }
         else
             nneither += 1;
+    }
+}
+
+Node* Graph::getOrCreate(std::string value) {
+    Node *node;
+    if (nodes.count(value))
+        return nodes[value];
+    else {
+        node = new Node(value);
+        nodes[value] = node;
+        return node;
+    }
+}
+
+bool Graph::endsWith(std::string const &value, std::string const &ending)
+{
+    return (ending.size() <= value.size())
+        && std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+}
+
+bool Graph::startsWith(std::string const &value, std::string const &starting) {
+    return (starting.length() <= value.length())
+        && std::equal(starting.begin(), starting.end(), value.begin());
+}
+
+Graph::Graph(std::map<std::string, int> oligoMap) {
+    for (auto i : oligoMap) {
+        for (auto j : oligoMap) {
+            Node *nodeL = getOrCreate(i.first), *nodeR = getOrCreate(j.first);
+            if (nodeL == nodeR)
+                break;
+            // step 2 here
+            if (startsWith(nodeL->value(), nodeR->value())) {
+                //TODO: add arc from v_j to v_i
+                printf("%s starts with %s\n", nodeL->value().c_str(), nodeR->value().c_str());
+            }
+            else if (endsWith(nodeL->value(), nodeR->value())) {
+                //TODO: add arc from v_i to v_j
+                printf("%s ends with %s\n", nodeL->value().c_str(), nodeR->value().c_str());
+            }
+            else if ((nodeL->value().length() == nodeR->value().length()) &&
+                  endsWith(nodeL->value(), nodeR->value().erase(nodeR->value().length() - 1))) {
+                //TODO: add arc from v_i to v_j
+                //on condition the overlap does not produce negative errors (?)
+                printf("%s and %s are overlaping\n", nodeL->value().c_str(), nodeR->value().c_str());
+            }
+        }
     }
 }
 
