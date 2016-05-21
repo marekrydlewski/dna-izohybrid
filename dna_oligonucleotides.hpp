@@ -2,7 +2,9 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 #include <map>
+#include <random>
 #include "oligo_numbers.hpp"
 
 class DnaOligonucleotides
@@ -21,6 +23,7 @@ private:
 public:
     DnaOligonucleotides(std::string dna, int temp);
     std::map<std::string, int> getOligoMap() { return this->oligoMap; };
+    std::map<std::string, OligoNumbers> getOligoMapStructuredWithNegativeErrors(double = 0.0);
     virtual ~DnaOligonucleotides();
 };
 
