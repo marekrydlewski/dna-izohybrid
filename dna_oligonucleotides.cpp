@@ -63,19 +63,17 @@ std::map<std::string, OligoNumbers> DnaOligonucleotides::getOligoMapStructuredWi
     }
 
     int m = this->oligoMapStructured.size() * degenRatio;
-    for (int i = 0; i < m; ++i) {
+    for (int i = 0; i < n; i++) {
         int j = uni(rng);
-        if (j != 0)
-            std::swap(arr[i], arr[i + j]);
+        std::swap(arr[i], arr[j]);
     }
-    // first m elements in arr;
+    //first m elements in arr;
     std::vector<std::string> subArr(&arr[0], &arr[m]);
     std::map<std::string, OligoNumbers> degenMap;
     degenMap = this->oligoMapStructured;
     for (auto &oligo : subArr)
         degenMap[oligo]--;
     return degenMap;
-
 }
 
 DnaOligonucleotides::~DnaOligonucleotides()
