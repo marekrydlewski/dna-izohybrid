@@ -281,7 +281,4 @@ paket-files/
 *.sln.iml
 
 # VS project
-*.sln
 *.db
-*.vcxproj
-*.vcxproj.filters
