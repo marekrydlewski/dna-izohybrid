@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include "oligo_numbers.hpp"
 
 class DnaOligonucleotides
 {
@@ -12,6 +13,7 @@ private:
     const static int cgTemp{ 4 };
     std::string dna;
     std::map<std::string, int> oligoMap;
+    std::map<std::string, OligoNumbers> oligoMapStructured;
     int temp;
     int temp2;
     void generateScatteredMap();
