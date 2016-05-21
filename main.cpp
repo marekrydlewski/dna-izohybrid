@@ -13,8 +13,8 @@ int main(int argc, const char * argv[]) {
     auto dna_scattered = new DnaOligonucleotides(dna_loader->getDna(DNA_LENGTH), DNA_TEMPERATURE);
 
     auto oligo_map = dna_scattered->getOligoMap();
-//    for (auto &t : oligo_map)
-//        std::cout << t.first << " " << t.second << std::endl;
+    for (auto &t : oligo_map)
+        std::cout << t.first << " " << t.second << std::endl;
     auto degen_oligo_map = dna_scattered->getOligoMapStructuredWithNegativeErrors(0.5);
     Graph* graph = new Graph(oligo_map);
     /*

@@ -53,14 +53,9 @@ Graph::Graph(std::string data, int k) {
 }
 
 Node* Graph::getOrCreate(std::string value) {
-    Node *node;
-    if (nodes.count(value))
-        return nodes[value];
-    else {
-        node = new Node(value);
-        nodes[value] = node;
-        return node;
-    }
+    if (!nodes.count(value))
+        nodes[value] = new Node(value);
+    return nodes[value];
 }
 
 bool Graph::endsWith(std::string const &value, std::string const &ending)
@@ -75,26 +70,38 @@ bool Graph::startsWith(std::string const &value, std::string const &starting) {
 }
 
 Graph::Graph(std::map<std::string, int> oligoMap) {
-    for (auto i : oligoMap) {
-        for (auto j : oligoMap) {
-            Node *nodeL = getOrCreate(i.first), *nodeR = getOrCreate(j.first);
-            if (nodeL == nodeR)
+    for (auto o_i : oligoMap) {
+        for (auto o_j : oligoMap) {
+            Node *v_i = getOrCreate(o_i.first), *v_j = getOrCreate(o_j.first);
+            if (v_i == v_j)
                 break;
-            // step 2 here
-            if (startsWith(nodeL->value(), nodeR->value())) {
-                //TODO: add arc from v_j to v_i
-                printf("%s starts with %s\n", nodeL->value().c_str(), nodeR->value().c_str());
+            if (startsWith(v_i->value(), v_j->value())) {
+                if (!v_j->isLeaveLocked() && !v_i->isEnterLocked()) {
+                    v_j->setOut(v_j->out() + 1);
+                    v_i->setIn(v_i->in() + 1);
+                    if (G.count(v_j) == 0)
+                        G[v_j] = new std::vector<Node*>();
+                    G[v_j]->push_back(v_i);
+                    v_i->lockLeave();
+                    v_j->lockEnter();
+                }
             }
-            else if (endsWith(nodeL->value(), nodeR->value())) {
-                //TODO: add arc from v_i to v_j
-                printf("%s ends with %s\n", nodeL->value().c_str(), nodeR->value().c_str());
+            else if (endsWith(v_i->value(), v_j->value())) {
+                if (!v_i->isLeaveLocked() && !v_j->isEnterLocked()) {
+                    v_i->setOut(v_i->out() + 1);
+                    v_j->setIn(v_j->in() + 1);
+                    if (G.count(v_i) == 0)
+                        G[v_i] = new std::vector<Node*>();
+                    G[v_i]->push_back(v_j);
+                    v_j->lockLeave();
+                    v_i->lockEnter();
+                }
             }
-            else if ((nodeL->value().length() == nodeR->value().length()) &&
-                  endsWith(nodeL->value(), nodeR->value().erase(nodeR->value().length() - 1))) {
+//            else if ((v_i->value().length() == v_j->value().length()) &&
+//                  endsWith(v_i->value(), v_j->value().erase(v_j->value().length() - 1))) {
                 //TODO: add arc from v_i to v_j
                 //on condition the overlap does not produce negative errors (?)
-                printf("%s and %s are overlaping\n", nodeL->value().c_str(), nodeR->value().c_str());
-            }
+//            }
         }
     }
 }
