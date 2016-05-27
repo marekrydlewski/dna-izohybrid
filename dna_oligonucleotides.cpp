@@ -6,7 +6,7 @@ void DnaOligonucleotides::generateScatteredMap()
 {
     std::string oligo;
     int temporaryTemp = 0;
-    for (int i = 0; i < dna.length(); i++)
+    for (auto i = 0; i < dna.length(); i++)
     {
         oligo += dna[i];
         temporaryTemp += getNucleotideTemp(dna[i]);
@@ -68,7 +68,7 @@ std::map<std::string, OligoNumbers> DnaOligonucleotides::getOligoMapStructuredWi
     std::map<std::string, OligoNumbers> degenMap;
     degenMap = this->oligoMapStructured;
     for (auto &oligo : subArr)
-        degenMap[oligo]--;
+        --degenMap[oligo];
     return degenMap;
 }
 

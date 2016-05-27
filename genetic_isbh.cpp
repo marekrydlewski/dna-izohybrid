@@ -64,12 +64,12 @@ void GeneticISBH::computeSolution()
     const int numPop = oligoSpectrum.size() * populationRatio;
     const int spectrumSize = oligoSpectrum.size();
     std::vector<int> firstIndividual;
-    for (int i = 0; i < spectrumSize; ++i)
+    for (auto i = 0; i < spectrumSize; ++i)
     {
         firstIndividual.push_back(i);
     }
     // create 1/2 * size instances of individuals
-    for (int i = 0; i < numPop; ++i)
+    for (auto i = 0; i < numPop; ++i)
     {
         std::vector<int> individual = firstIndividual;
         std::random_shuffle(individual.begin(), individual.end()); // uses default random engine, we can change to other one in future
@@ -78,12 +78,21 @@ void GeneticISBH::computeSolution()
     // step 2 - repaet step 3 - parent selection
     for (auto& individual : population)
     {
-        auto i = 0;
         auto lastButOne = individual.end();
         --lastButOne;
+        auto currentSize = 0;
+        auto numberOfOligos = 0;
         for (auto it = individual.begin(); it != lastButOne; ++it)
         {
             auto overlap = getOverlap(oligoSpectrum[*it], oligoSpectrum[*(it + 1)]);
+            auto possibleCurrentSize = currentSize + oligoSpectrum[*it].size() - overlap;
+            if (possibleCurrentSize > dnaSize) 
+                break;
+            else
+            {
+                currentSize = possibleCurrentSize;
+                ++numberOfOligos;
+            }
         }
     }
 

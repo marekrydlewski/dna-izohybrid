@@ -1,11 +1,8 @@
 #pragma once
 
-#include <iostream>
-#include <string>
 #include <vector>
 #include <map>
 #include "oligo_numbers.hpp"
-
 
 class GeneticISBH
 {
