@@ -21,8 +21,9 @@ int GeneticISBH::castOligoNumbersToInt(OligoNumbers x, bool withExcess)
     return 6; //many
 }
 
-void GeneticISBH::loadOligoMap(std::map<std::string, OligoNumbers> oligoMap)
+void GeneticISBH::loadOligoMap(std::map<std::string, OligoNumbers> oligoMap, int size)
 {
+    dnaSize = size;
     for (auto & x : oligoMap)
     {
         for (auto i = 0; i < castOligoNumbersToInt(x.second); ++i)
@@ -30,6 +31,10 @@ void GeneticISBH::loadOligoMap(std::map<std::string, OligoNumbers> oligoMap)
             oligoSpectrum.push_back(x.first);
         }
     }
+}
+
+int GeneticISBH::getOverlap(std::string s, std::string s2)
+{
 }
 
 void GeneticISBH::computeSolution()
@@ -43,14 +48,24 @@ void GeneticISBH::computeSolution()
         firstIndividual.push_back(i);
     }
     // create 1/2 * size instances of individuals
-    for (int i = 0; i < numPop; ++i) 
+    for (int i = 0; i < numPop; ++i)
     {
         std::vector<int> individual = firstIndividual;
         std::random_shuffle(individual.begin(), individual.end()); // uses default random engine, we can change to other one in future
         population.push_back(individual);
     }
+    // step 2 - repaet step 3 - parent selection
+    for (auto& individual : population)
+    {
+        auto i = 0;
+        auto lastButOne = individual.end();
+        --lastButOne;
+        for(auto it = individual.begin(); it != lastButOne; ++it)
+        {
+            auto overlap = getOverlap(oligoSpectrum[*it], oligoSpectrum[*(it + 1)]);
+        }
+    }
 
-    //step 2 - repaet step 3 - parent selection
 }
 
 GeneticISBH::GeneticISBH()

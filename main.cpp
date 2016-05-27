@@ -19,7 +19,7 @@ int main(int argc, const char * argv[])
         std::cout << t.first << " " << t.second << std::endl;
     auto degen_oligo_map = dna_scattered->getOligoMapStructuredWithNegativeErrors(NEGATIVE_ERRORS_RATIO);
     auto genetic_isbh = new GeneticISBH();
-    genetic_isbh->loadOligoMap(degen_oligo_map);
+    genetic_isbh->loadOligoMap(degen_oligo_map, DNA_LENGTH);
     genetic_isbh->computeSolution();
 
     Graph* graph = new Graph(oligo_map);
