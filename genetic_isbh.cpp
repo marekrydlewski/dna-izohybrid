@@ -33,8 +33,29 @@ void GeneticISBH::loadOligoMap(std::map<std::string, OligoNumbers> oligoMap, int
     }
 }
 
-int GeneticISBH::getOverlap(std::string s, std::string s2)
+int GeneticISBH::getOverlap(std::string s1, std::string s2)
 {
+    int max = 0; // max common substring (end s1 ___ begin s2) - overlap
+    int size = s1.size() > s2.size() ? s2.size() : s1.size();
+    int j = 1;
+    for (auto i = size - 1; i >= 0; --i)
+    {
+        bool isValid = true;
+        for (auto jj = 0; jj < j; ++jj)
+        {
+            if (s1[s1.size() - 1 - j + 1 + jj] != s2[jj])
+            {
+                isValid = false;
+                break;
+            }
+        }
+        if (isValid)
+        {
+            max = j;
+        }
+        ++j;
+    }
+    return max;
 }
 
 void GeneticISBH::computeSolution()
@@ -60,7 +81,7 @@ void GeneticISBH::computeSolution()
         auto i = 0;
         auto lastButOne = individual.end();
         --lastButOne;
-        for(auto it = individual.begin(); it != lastButOne; ++it)
+        for (auto it = individual.begin(); it != lastButOne; ++it)
         {
             auto overlap = getOverlap(oligoSpectrum[*it], oligoSpectrum[*(it + 1)]);
         }

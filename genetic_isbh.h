@@ -17,7 +17,7 @@ private:
     static int castOligoNumbersToInt(OligoNumbers x, bool withExcess = true);
 public:
     void loadOligoMap(std::map<std::string, OligoNumbers> oligoMap, int size);
-    int getOverlap(std::string s, std::string s2);
+    static int getOverlap(std::string s, std::string s2);
     void computeSolution();
     GeneticISBH();
     ~GeneticISBH();

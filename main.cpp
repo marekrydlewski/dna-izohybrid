@@ -20,7 +20,8 @@ int main(int argc, const char * argv[])
     auto degen_oligo_map = dna_scattered->getOligoMapStructuredWithNegativeErrors(NEGATIVE_ERRORS_RATIO);
     auto genetic_isbh = new GeneticISBH();
     genetic_isbh->loadOligoMap(degen_oligo_map, DNA_LENGTH);
-    genetic_isbh->computeSolution();
+    //genetic_isbh->computeSolution();
+    std::cout << genetic_isbh->getOverlap("aattccgg", "tccggaa") << std::endl;
 
     Graph* graph = new Graph(oligo_map);
     /*
