@@ -1,8 +1,10 @@
 #include "genetic_isbh.h"
 #include <algorithm>
+#include <functional>
 
 
 const double GeneticISBH::populationRatio = 0.5;
+const double GeneticISBH::parentsRatio = 0.9;
 
 int GeneticISBH::castOligoNumbersToInt(OligoNumbers x, bool withExcess)
 {
@@ -63,29 +65,30 @@ void GeneticISBH::computeSolution()
     //step1 - generate population
     const int numPop = oligoSpectrum.size() * populationRatio;
     const int spectrumSize = oligoSpectrum.size();
-    std::vector<int> firstIndividual;
+    Individual firstIndividual;
     for (auto i = 0; i < spectrumSize; ++i)
     {
-        firstIndividual.push_back(i);
+        firstIndividual.oligos.push_back(i);
     }
     // create 1/2 * size instances of individuals
     for (auto i = 0; i < numPop; ++i)
     {
-        std::vector<int> individual = firstIndividual;
-        std::random_shuffle(individual.begin(), individual.end()); // uses default random engine, we can change to other one in future
+        auto individual = firstIndividual;
+        // uses default random engine, we can change to other one in future
+        std::random_shuffle(individual.oligos.begin(), individual.oligos.end());
         population.push_back(individual);
     }
     // step 2 - repaet step 3 - parent selection
     for (auto& individual : population)
     {
-        auto lastButOne = individual.end();
+        auto lastButOne = individual.oligos.end();
         --lastButOne;
-        auto currentSize = 0;
-        auto numberOfOligos = 0;
-        for (auto it = individual.begin(); it != lastButOne; ++it)
+        auto currentSize = oligoSpectrum[individual.oligos[0]].size();
+        auto numberOfOligos = 1;
+        for (auto it = individual.oligos.begin(); it != lastButOne; ++it)
         {
             auto overlap = getOverlap(oligoSpectrum[*it], oligoSpectrum[*(it + 1)]);
-            auto possibleCurrentSize = currentSize + oligoSpectrum[*it].size() - overlap;
+            auto possibleCurrentSize = currentSize + oligoSpectrum[*(it + 1)].size() - overlap;
             if (possibleCurrentSize > dnaSize) 
                 break;
             else
@@ -94,7 +97,11 @@ void GeneticISBH::computeSolution()
                 ++numberOfOligos;
             }
         }
+        individual.fitness = numberOfOligos;
+        //select best c = 0.9 * n parents
     }
+    // sort descending
+    std::sort(population.begin(), population.end(), std::greater<Individual>());
 
 }
 

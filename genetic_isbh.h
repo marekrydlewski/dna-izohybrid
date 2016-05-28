@@ -6,10 +6,25 @@
 
 class GeneticISBH
 {
+    struct Individual
+    {
+        std::vector<int> oligos;
+        int fitness;
+        bool operator < (const Individual& str) const
+        {
+            return (this->fitness < str.fitness);
+        }
+        bool operator > (const Individual& str) const
+        {
+            return (this->fitness > str.fitness);
+        }
+        Individual() { this->fitness = 0; }
+    };
 private:
     int dnaSize;
     std::vector<std::string> oligoSpectrum;
-    std::vector<std::vector<int>> population;
+    std::vector<Individual> population;
+    const static double parentsRatio;
     const static double populationRatio;
     static int castOligoNumbersToInt(OligoNumbers x, bool withExcess = true);
 public:
