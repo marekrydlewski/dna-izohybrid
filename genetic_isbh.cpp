@@ -68,15 +68,49 @@ int GeneticISBH::getPredecessorOverlap(int index, Individual& individual, std::v
     else return getOverlap(oligoSpectrum[individual.oligos[index - 1]], oligoSpectrum[individual.oligos[index]]);
 }
 
-int GeneticISBH::getSucessorOverlap(int index, Individual& individual)
+int GeneticISBH::getSuccessorOverlap(int index, Individual& individual, std::vector<bool>& alreadyUsed)
 {
-    if (index + 1 == individual.oligos.size()) return -1;
+    if (index + 1 == individual.oligos.size() || alreadyUsed[index + 1])
+        return -1;
     else return getOverlap(oligoSpectrum[individual.oligos[index]], oligoSpectrum[individual.oligos[index + 1]]);
 }
 
-int GeneticISBH::findBestPredecessorOverlap(int index, Individual & individual)
+std::pair<int, std::vector<int>::iterator> GeneticISBH::findBestPredecessorOverlap(int index, Individual& individual, std::vector<bool>& alreadyUsed)
 {
-    return 0;
+    int overlap = 0, currentOverlap = 0;
+    std::vector<int>::iterator iter;
+    for (auto i = 0; i < individual.oligos.size(); ++i)
+    {
+        if (!alreadyUsed[i]) 
+        {
+            currentOverlap = getOverlap(oligoSpectrum[individual.oligos[i]], oligoSpectrum[individual.oligos[index]]);
+            if (currentOverlap > overlap) 
+            {
+                overlap = currentOverlap;
+                iter = individual.oligos.begin() + i;
+            }
+        }
+    }
+    return std::make_pair(overlap, iter);
+}
+
+std::pair<int, std::vector<int>::iterator> GeneticISBH::findBestSuccessorOverlap(int index, Individual& individual, std::vector<bool>& alreadyUsed)
+{
+    int overlap = 0, currentOverlap = 0;
+    std::vector<int>::iterator iter;
+    for (auto i = 0; i < individual.oligos.size(); ++i)
+    {
+        if (!alreadyUsed[i])
+        {
+            currentOverlap = getOverlap(oligoSpectrum[individual.oligos[index]], oligoSpectrum[individual.oligos[i]]);
+            if (currentOverlap > overlap)
+            {
+                overlap = currentOverlap;
+                iter = individual.oligos.begin() + i;
+            }
+        }
+    }
+    return std::make_pair(overlap, iter);
 }
 
 void GeneticISBH::computeSolution()
@@ -136,52 +170,77 @@ void GeneticISBH::computeSolution()
         auto ofIndex = firstOligoIndex, oiIndex = firstOligoIndex;
 
         // keep info if already in child's solution
-        std::vector<bool> firstParentAlreadyUsed(firstParent.oligos.size(), false);
-        std::vector<bool> secondParentAlreadyUsed(secondParent.oligos.size(), false);
+        std::vector<bool> alreadyUsed(firstParent.oligos.size(), false);
         Individual child;
         child.oligos.push_back(firstOligoIndex);
-        //firstParentAlreadyUsed[firstOligoIndex] = true;
-        //secondParentAlreadyUsed[firstOligoIndex] = true;
-        //while (child.oligos.size() != firstParent.oligos.size())
-        //{
-        //    auto firstParentOligoOfIter = std::find(firstParent.oligos.begin(), firstParent.oligos.end(), ofIndex);
-        //    auto secondParentOligoOfIter = std::find(secondParent.oligos.begin(), secondParent.oligos.end(), ofIndex);
-        //    auto firstParentOligoOiIter = std::find(firstParent.oligos.begin(), firstParent.oligos.end(), oiIndex);
-        //    auto secondParentOligoOiIter = std::find(secondParent.oligos.begin(), secondParent.oligos.end(), oiIndex);
-        //    // predecessor
-        //    auto overlapPreFirstParent = getPredecessorOverlap(std::distance(firstParent.oligos.begin(), firstParentOligoOfIter), firstParent, firstParentAlreadyUsed);
-        //    auto overlapPreSecondParent = getPredecessorOverlap(std::distance(secondParent.oligos.begin(), secondParentOligoOfIter), secondParent, secondParentAlreadyUsed);
-        //    // successor
-        //    auto overlapSuccFirstParent = getSucessorOverlap(std::distance(firstParent.oligos.begin(), firstParentOligoOiIter), firstParent);
-        //    auto overlapSuccSecondParent = getSucessorOverlap(std::distance(secondParent.oligos.begin(), secondParentOligoOiIter), secondParent);
-        //    
-        //    if (overlapPreFirstParent == -1 && overlapPreSecondParent == -1)
-        //    {
-        //        overlapPreFirstParent = findBestPredecessorOverlap(std::distance(firstParent.oligos.begin(), firstParentOligoOfIter), firstParent);
-        //        overlapPreSecondParent = findBestPredecessorOverlap(std::distance(firstParent.oligos.begin(), firstParentOligoOfIter), firstParent);
-        //    }
-        //    
-        //    
-        //    
-        //    
-        //    // WORK IN PROGRESS
-        //        
-        //    if (overlapPreFirstParent > overlapPreSecondParent) {
-        //        child.oligos.push_back(*(firstParentOligoOfIter - 1));
-        //        firstParentAlreadyUsed[]
-        //    }
-        //    else child.oligos.push_back(*(secondParentOligoOfIter - 1));
+        alreadyUsed[firstOligoIndex] = true;
+        while (child.oligos.size() != firstParent.oligos.size())
+        {
+            auto firstParentOligoOfIter = std::find(firstParent.oligos.begin(), firstParent.oligos.end(), ofIndex);
+            auto secondParentOligoOfIter = std::find(secondParent.oligos.begin(), secondParent.oligos.end(), ofIndex);
+            auto firstParentOligoOiIter = std::find(firstParent.oligos.begin(), firstParent.oligos.end(), oiIndex);
+            auto secondParentOligoOiIter = std::find(secondParent.oligos.begin(), secondParent.oligos.end(), oiIndex);
+            // predecessor
+            auto overlapPreFirstParent = getPredecessorOverlap(std::distance(firstParent.oligos.begin(), firstParentOligoOfIter), firstParent, alreadyUsed);
+            auto overlapPreSecondParent = getPredecessorOverlap(std::distance(secondParent.oligos.begin(), secondParentOligoOfIter), secondParent, alreadyUsed);
+            // successor
+            auto overlapSuccFirstParent = getSuccessorOverlap(std::distance(firstParent.oligos.begin(), firstParentOligoOiIter), firstParent, alreadyUsed);
+            auto overlapSuccSecondParent = getSuccessorOverlap(std::distance(secondParent.oligos.begin(), secondParentOligoOiIter), secondParent, alreadyUsed);
+            
+            // if no predecessor available take best one in all range
+            if (overlapPreFirstParent == -1 && overlapPreSecondParent == -1)
+            {
+                auto firstParentPairPre = findBestPredecessorOverlap(std::distance(firstParent.oligos.begin(), firstParentOligoOfIter), firstParent, alreadyUsed);
+                auto secondParentPairPre = findBestPredecessorOverlap(std::distance(secondParent.oligos.begin(), secondParentOligoOfIter), secondParent, alreadyUsed);
+                std::pair<int, std::vector<int>::iterator> finalPair;
+                if (firstParentPairPre.first > secondParentPairPre.first)
+                    finalPair = firstParentPairPre;
+                else finalPair = secondParentPairPre;
+                child.oligos.push_back(*finalPair.second);
+                alreadyUsed[*finalPair.second] = true;
+                ofIndex = *finalPair.second;
+            }
+            else if (overlapPreFirstParent > overlapPreSecondParent)
+            {
+                child.oligos.push_back(*(firstParentOligoOfIter - 1));
+                alreadyUsed[*(firstParentOligoOfIter - 1)] = true;
+                ofIndex = *(firstParentOligoOfIter - 1);
+            }
+            else
+            {
+                child.oligos.push_back(*(secondParentOligoOfIter - 1));
+                alreadyUsed[*(secondParentOligoOfIter - 1)] = true;
+                ofIndex = *(secondParentOligoOfIter - 1);
+            }
 
-        //    if (overlapSuccFirstParent == -1 && overlapSuccSecondParent == -1)
-
-        //    if (overlapSuccFirstParent > overlapSuccSecondParent) child.oligos.push_back(*(firstParentOligoOiIter - 1));
-        //    else child.oligos.push_back(*(secondParentOligoOiIter - 1));
-        //    // remove used oligos from parents
-
+            // if no succcessor available take best one in all range
+            if (overlapSuccFirstParent == -1 && overlapSuccSecondParent == -1)
+            {
+                auto firstParentPairPre = findBestSuccessorOverlap(std::distance(firstParent.oligos.begin(), firstParentOligoOiIter), firstParent, alreadyUsed);
+                auto secondParentPairPre = findBestPredecessorOverlap(std::distance(secondParent.oligos.begin(), secondParentOligoOiIter), secondParent, alreadyUsed);
+                std::pair<int, std::vector<int>::iterator> finalPair;
+                if (firstParentPairPre.first > secondParentPairPre.first)
+                    finalPair = firstParentPairPre;
+                else finalPair = secondParentPairPre;
+                child.oligos.push_back(*finalPair.second);
+                alreadyUsed[*finalPair.second] = true;
+                oiIndex = *finalPair.second;
+            }
+            else if (overlapSuccFirstParent > overlapSuccSecondParent)
+            {
+                child.oligos.push_back(*(firstParentOligoOiIter + 1));
+                alreadyUsed[*(firstParentOligoOiIter + 1)] = true;
+                oiIndex = *(firstParentOligoOiIter + 1);
+            }
+            else
+            {
+                child.oligos.push_back(*(secondParentOligoOiIter - 1));
+                alreadyUsed[*(secondParentOligoOiIter + 1)] = true;
+                oiIndex = *(secondParentOligoOiIter + 1);
+            }
+            //WORK IN PROGRESS
         }
     }
-
-
 }
 
 GeneticISBH::GeneticISBH()

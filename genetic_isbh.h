@@ -31,8 +31,9 @@ public:
     void loadOligoMap(std::map<std::string, OligoNumbers> oligoMap, int size);
     static int getOverlap(std::string s, std::string s2);
     int getPredecessorOverlap(int index, Individual& individual, std::vector<bool>& alreadyUsed);
-    int getSucessorOverlap(int index, Individual& individual);
-    int findBestPredecessorOverlap(int index, Individual& individual);
+    int getSuccessorOverlap(int index, Individual& individual, std::vector<bool>& alreadyUsed);
+    std::pair<int, std::vector<int>::iterator> findBestPredecessorOverlap(int index, Individual & individual, std::vector<bool>& alreadyUsed);
+    std::pair<int, std::vector<int>::iterator> findBestSuccessorOverlap(int index, Individual & individual, std::vector<bool>& alreadyUsed);
     void computeSolution();
     GeneticISBH();
     ~GeneticISBH();
