@@ -212,7 +212,8 @@ void GeneticISBH::computeSolution()
                 alreadyUsed[*(secondParentOligoOfIter - 1)] = true;
                 ofIndex = *(secondParentOligoOfIter - 1);
             }
-
+            // if all are used:
+            if (child.oligos.size() != firstParent.oligos.size()) break;
             // if no succcessor available take best one in all range
             if (overlapSuccFirstParent == -1 && overlapSuccSecondParent == -1)
             {
@@ -240,6 +241,7 @@ void GeneticISBH::computeSolution()
             }
             //WORK IN PROGRESS
         }
+        ///
     }
 }
 

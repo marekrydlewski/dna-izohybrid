@@ -6,7 +6,7 @@
 #include "genetic_isbh.h"
 
 const int K_MER_LENGTH = 5;
-const int DNA_LENGTH = 100;
+const int DNA_LENGTH = 30;
 const int DNA_TEMPERATURE = 8;
 const double NEGATIVE_ERRORS_RATIO = 0.1;
 
