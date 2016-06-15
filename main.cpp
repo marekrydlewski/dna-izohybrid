@@ -23,7 +23,7 @@ int main(int argc, const char * argv[])
     auto genetic_isbh = new GeneticISBH();
     genetic_isbh->loadOligoMap(degen_oligo_map, DNA_LENGTH);
     genetic_isbh->loadFirstOligo(oligo);
-    //genetic_isbh->computeSolution();
+    genetic_isbh->computeSolution();
     //std::cout << genetic_isbh->getOverlap("aac", "cc") << std::endl;
 
     Graph* graph = new Graph(oligo_map);
