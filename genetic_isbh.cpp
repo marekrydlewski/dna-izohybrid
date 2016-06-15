@@ -120,9 +120,31 @@ std::pair<int, std::vector<int>::iterator> GeneticISBH::findBestSuccessorOverlap
 
 void GeneticISBH::mutatePopulation()
 {
-    for(auto& indiv : population)
+    std::random_device rd;
+    std::mt19937 rng(rd());
+    std::uniform_int_distribution<int> popDist(0, population.size() - 1);
+    for(auto r = 0; r < 0.01 * oligoSpectrum.size() * population.size() * 0.5; ++r)
     {
-        
+        auto randomIndex = popDist(rng);
+        int overlap = 66666, currentOverlap, index = -1;
+        for (auto i = 2; i < population[randomIndex].oligos.size() - 2; ++i)
+        {
+            currentOverlap = getOverlap(oligoSpectrum[population[randomIndex].oligos[i]], oligoSpectrum[population[randomIndex].oligos[i + 1]]) +
+                getOverlap(oligoSpectrum[population[randomIndex].oligos[i -1]], oligoSpectrum[population[randomIndex].oligos[i]]);    
+            if (currentOverlap < overlap)
+            {
+                overlap = currentOverlap;
+                index = i;
+            }
+            int overlapLeftNeighbour = getOverlap(oligoSpectrum[population[randomIndex].oligos[index - 1]], oligoSpectrum[population[randomIndex].oligos[index]]) +
+                getOverlap(oligoSpectrum[population[randomIndex].oligos[index - 2]], oligoSpectrum[population[randomIndex].oligos[index - 1]]);
+            int overlapRightNeighbour = getOverlap(oligoSpectrum[population[randomIndex].oligos[index + 1]], oligoSpectrum[population[randomIndex].oligos[index + 2]]) +
+                getOverlap(oligoSpectrum[population[randomIndex].oligos[index]], oligoSpectrum[population[randomIndex].oligos[index + 1]]);
+            if (overlapLeftNeighbour < overlapRightNeighbour)
+                std::swap(population[randomIndex].oligos[index - 1], population[randomIndex].oligos[index]);
+            else
+                std::swap(population[randomIndex].oligos[index], population[randomIndex].oligos[index + 1]);
+        }
     }
 }
 
@@ -252,7 +274,8 @@ void GeneticISBH::computeSolution()
                     alreadyUsed[oiIndex] = true;
                 }
             }
-            //add child to temporary population
+            //add child to temporary population && compute its fitness
+            child.fitness = computeFitness(child);
             newPopulation.push_back(child);
         }
         //take best parents (already sorted)
@@ -260,8 +283,8 @@ void GeneticISBH::computeSolution()
         {
             newPopulation.push_back(this->population[i]);
         }
-        mutatePopulation();
         this->population = newPopulation;
+        mutatePopulation();
     }
 }
 
