@@ -158,6 +158,7 @@
     <ClInclude Include="dna_sequence.hpp" />
     <ClInclude Include="genetic_isbh.h" />
     <ClInclude Include="graph.hpp" />
+    <ClInclude Include="individual.hpp" />
     <ClInclude Include="node.hpp" />
     <ClInclude Include="oligo_numbers.hpp" />
   </ItemGroup>

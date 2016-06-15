@@ -4,11 +4,43 @@
 #include "dna_sequence.hpp"
 #include "dna_oligonucleotides.hpp"
 #include "genetic_isbh.h"
+#include <numeric>
 
 const int K_MER_LENGTH = 5;
-const int DNA_LENGTH = 30;
-const int DNA_TEMPERATURE = 8;
-const double NEGATIVE_ERRORS_RATIO = 0.03;
+const int DNA_LENGTH = 600;
+const int DNA_TEMPERATURE = 28;
+const double NEGATIVE_ERRORS_RATIO = 0.01;
+
+int levenshtein_distance(const std::string &s1, const std::string &s2)
+{
+    // To change the type this function manipulates and returns, change
+    // the return type and the types of the two variables below.
+    int s1len = s1.size();
+    int s2len = s2.size();
+
+    auto column_start = (decltype(s1len))1;
+
+    auto column = new decltype(s1len)[s1len + 1];
+    std::iota(column + column_start, column + s1len + 1, column_start);
+
+    for (auto x = column_start; x <= s2len; x++) {
+        column[0] = x;
+        auto last_diagonal = x - column_start;
+        for (auto y = column_start; y <= s1len; y++) {
+            auto old_diagonal = column[y];
+            auto possibilities = {
+                column[y] + 1,
+                column[y - 1] + 1,
+                last_diagonal + (s1[y - 1] == s2[x - 1] ? 0 : 1)
+            };
+            column[y] = std::min(possibilities);
+            last_diagonal = old_diagonal;
+        }
+    }
+    auto result = column[s1len];
+    delete[] column;
+    return result;
+}
 
 int main(int argc, const char * argv[])
 {
@@ -23,8 +55,12 @@ int main(int argc, const char * argv[])
     auto genetic_isbh = new GeneticISBH();
     genetic_isbh->loadOligoMap(degen_oligo_map, DNA_LENGTH);
     genetic_isbh->loadFirstOligo(oligo);
-    genetic_isbh->computeSolution();
-    //std::cout << genetic_isbh->getOverlap("aac", "cc") << std::endl;
+    auto solution = genetic_isbh->computeSolution();
+    auto leven = levenshtein_distance(dna_loader->getDna(DNA_LENGTH), solution);
+    //std::cout << dna_loader->getDna(DNA_LENGTH) << std::endl;
+    //std::cout << solution << std::endl;
+    std::cout << "Levensthein distance: " << leven << std::endl;
+    std::cout << "Levensthein distance in %: " <<1 - 2 * leven / double(DNA_LENGTH + solution.size()) << std::endl;
 
     Graph* graph = new Graph(oligo_map);
     /*
