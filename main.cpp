@@ -15,6 +15,7 @@ int main(int argc, const char * argv[])
     auto dna_loader = new DnaSequence("dna-data.txt");
     auto dna_scattered = new DnaOligonucleotides(dna_loader->getDna(DNA_LENGTH), DNA_TEMPERATURE);
     auto oligo = dna_scattered->getFirstOligo();
+    std::cout << "The first oligo is: " << oligo << std::endl;
     auto oligo_map = dna_scattered->getOligoMap();
     for (auto &t : oligo_map)
         std::cout << t.first << " " << t.second << std::endl;
@@ -22,7 +23,7 @@ int main(int argc, const char * argv[])
     auto genetic_isbh = new GeneticISBH();
     genetic_isbh->loadOligoMap(degen_oligo_map, DNA_LENGTH);
     genetic_isbh->loadFirstOligo(oligo);
-    genetic_isbh->computeSolution();
+    //genetic_isbh->computeSolution();
     //std::cout << genetic_isbh->getOverlap("aac", "cc") << std::endl;
 
     Graph* graph = new Graph(oligo_map);

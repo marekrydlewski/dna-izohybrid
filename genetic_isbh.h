@@ -22,6 +22,7 @@ class GeneticISBH
     };
 private:
     int dnaSize;
+    int firstOligoIndex;
     std::vector<std::string> oligoSpectrum;
     std::vector<Individual> population;
     std::string firstOligo;
@@ -40,4 +41,3 @@ public:
     GeneticISBH();
     ~GeneticISBH();
 };
-
