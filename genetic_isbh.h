@@ -37,6 +37,8 @@ public:
     int getSuccessorOverlap(int index, Individual& individual, std::vector<bool>& alreadyUsed);
     std::pair<int, std::vector<int>::iterator> findBestPredecessorOverlap(int index, Individual & individual, std::vector<bool>& alreadyUsed);
     std::pair<int, std::vector<int>::iterator> findBestSuccessorOverlap(int index, Individual & individual, std::vector<bool> alreadyUsed);
+    void mutatePopulation();
+    int computeFitness(Individual& child);
     void computeSolution();
     GeneticISBH();
     ~GeneticISBH();

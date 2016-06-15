@@ -118,6 +118,35 @@ std::pair<int, std::vector<int>::iterator> GeneticISBH::findBestSuccessorOverlap
     return std::make_pair(overlap, iter);
 }
 
+void GeneticISBH::mutatePopulation()
+{
+    for(auto& indiv : population)
+    {
+        
+    }
+}
+
+int GeneticISBH::computeFitness(Individual& individual)
+{
+    auto lastButOne = individual.oligos.end();
+    --lastButOne;
+    auto currentSize = oligoSpectrum[individual.oligos[0]].size();
+    auto numberOfOligos = 1;
+    for (auto it = individual.oligos.begin(); it != lastButOne; ++it)
+    {
+        auto overlap = getOverlap(oligoSpectrum[*it], oligoSpectrum[*(it + 1)]);
+        auto possibleCurrentSize = currentSize + oligoSpectrum[*(it + 1)].size() - overlap;
+        if (possibleCurrentSize > dnaSize)
+            break;
+        else
+        {
+            currentSize = possibleCurrentSize;
+            ++numberOfOligos;
+        }
+    }
+    return numberOfOligos;
+}
+
 void GeneticISBH::computeSolution()
 {
     //step1 - generate population
@@ -139,23 +168,7 @@ void GeneticISBH::computeSolution()
     // step 2 - repaet step 3 - parent selection
     for (auto& individual : population)
     {
-        auto lastButOne = individual.oligos.end();
-        --lastButOne;
-        auto currentSize = oligoSpectrum[individual.oligos[0]].size();
-        auto numberOfOligos = 1;
-        for (auto it = individual.oligos.begin(); it != lastButOne; ++it)
-        {
-            auto overlap = getOverlap(oligoSpectrum[*it], oligoSpectrum[*(it + 1)]);
-            auto possibleCurrentSize = currentSize + oligoSpectrum[*(it + 1)].size() - overlap;
-            if (possibleCurrentSize > dnaSize)
-                break;
-            else
-            {
-                currentSize = possibleCurrentSize;
-                ++numberOfOligos;
-            }
-        }
-        individual.fitness = numberOfOligos;
+        individual.fitness = computeFitness(individual);
     }
     // sort descending
     std::sort(population.begin(), population.end(), std::greater<Individual>());
@@ -224,6 +237,7 @@ void GeneticISBH::computeSolution()
                     if (std::find(child.oligos.begin(), child.oligos.end(), *(firstParentOligoIter + 1)) != child.oligos.end())
                         flag = true;
                     oiIndex = *(firstParentOligoIter + 1);
+                    child.fitness = computeFitness(child);
                     child.oligos.push_back(oiIndex);
 
                     alreadyUsed[oiIndex] = true;
@@ -233,7 +247,6 @@ void GeneticISBH::computeSolution()
                     bool flag = false;
                     if (std::find(child.oligos.begin(), child.oligos.end(), *(secondParentOligoIter + 1)) != child.oligos.end())
                         flag = true;
-
                     oiIndex = *(secondParentOligoIter + 1);
                     child.oligos.push_back(oiIndex);
                     alreadyUsed[oiIndex] = true;
@@ -247,6 +260,7 @@ void GeneticISBH::computeSolution()
         {
             newPopulation.push_back(this->population[i]);
         }
+        mutatePopulation();
         this->population = newPopulation;
     }
 }
