@@ -47,6 +47,26 @@ DnaOligonucleotides::DnaOligonucleotides(std::string dna, int temp)
     this->generateScatteredMap();
 }
 
+std::string DnaOligonucleotides::getFirstOligo()
+{
+    std::string oligo;
+    int temporaryTemp = 0;
+    for (auto i = 0; i < dna.length(); i++)
+    {
+        oligo += dna[i];
+        temporaryTemp += getNucleotideTemp(dna[i]);
+        if (temporaryTemp == this->temp || temporaryTemp == this->temp2)
+            return oligo;
+        if (temporaryTemp >= this->temp2)
+        {
+            i -= oligo.length() - 1;
+            temporaryTemp = 0;
+            oligo = "";
+        }
+    }
+    return "";
+}
+
 std::map<std::string, OligoNumbers> DnaOligonucleotides::getOligoMapStructuredWithNegativeErrors(double degenRatio)
 {
     int n = this->oligoMapStructured.size();

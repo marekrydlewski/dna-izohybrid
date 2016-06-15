@@ -19,7 +19,9 @@ private:
     static int getNucleotideTemp(char);
 public:
     DnaOligonucleotides(std::string dna, int temp);
-    std::map<std::string, int> getOligoMap() { return this->oligoMap; };
+    std::map<std::string, int> getOligoMap() { return this->oligoMap; }
+
+    std::string getFirstOligo();;
     std::map<std::string, OligoNumbers> getOligoMapStructuredWithNegativeErrors(double = 0.0);
     virtual ~DnaOligonucleotides();
 };

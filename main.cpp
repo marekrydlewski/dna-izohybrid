@@ -8,20 +8,22 @@
 const int K_MER_LENGTH = 5;
 const int DNA_LENGTH = 30;
 const int DNA_TEMPERATURE = 8;
-const double NEGATIVE_ERRORS_RATIO = 0.1;
+const double NEGATIVE_ERRORS_RATIO = 0.03;
 
 int main(int argc, const char * argv[])
 {
     auto dna_loader = new DnaSequence("dna-data.txt");
     auto dna_scattered = new DnaOligonucleotides(dna_loader->getDna(DNA_LENGTH), DNA_TEMPERATURE);
+    auto oligo = dna_scattered->getFirstOligo();
     auto oligo_map = dna_scattered->getOligoMap();
     for (auto &t : oligo_map)
         std::cout << t.first << " " << t.second << std::endl;
     auto degen_oligo_map = dna_scattered->getOligoMapStructuredWithNegativeErrors(NEGATIVE_ERRORS_RATIO);
     auto genetic_isbh = new GeneticISBH();
     genetic_isbh->loadOligoMap(degen_oligo_map, DNA_LENGTH);
+    genetic_isbh->loadFirstOligo(oligo);
     genetic_isbh->computeSolution();
-    std::cout << genetic_isbh->getOverlap("aac", "cc") << std::endl;
+    //std::cout << genetic_isbh->getOverlap("aac", "cc") << std::endl;
 
     Graph* graph = new Graph(oligo_map);
     /*

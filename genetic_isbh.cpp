@@ -27,13 +27,18 @@ int GeneticISBH::castOligoNumbersToInt(OligoNumbers x, bool withExcess)
 void GeneticISBH::loadOligoMap(std::map<std::string, OligoNumbers> oligoMap, int size)
 {
     dnaSize = size;
-    for (auto & x : oligoMap)
+    for (auto& x : oligoMap)
     {
         for (auto i = 0; i < castOligoNumbersToInt(x.second); ++i)
         {
             oligoSpectrum.push_back(x.first);
         }
     }
+}
+
+void GeneticISBH::loadFirstOligo(const std::string& cs)
+{
+    firstOligo = cs;
 }
 
 int GeneticISBH::getOverlap(std::string s1, std::string s2)
@@ -81,10 +86,10 @@ std::pair<int, std::vector<int>::iterator> GeneticISBH::findBestPredecessorOverl
     std::vector<int>::iterator iter;
     for (auto i = 0; i < individual.oligos.size(); ++i)
     {
-        if (!alreadyUsed[i]) 
+        if (!alreadyUsed[i])
         {
             currentOverlap = getOverlap(oligoSpectrum[individual.oligos[i]], oligoSpectrum[individual.oligos[index]]);
-            if (currentOverlap > overlap) 
+            if (currentOverlap > overlap)
             {
                 overlap = currentOverlap;
                 iter = individual.oligos.begin() + i;
@@ -186,7 +191,7 @@ void GeneticISBH::computeSolution()
             // successor
             auto overlapSuccFirstParent = getSuccessorOverlap(std::distance(firstParent.oligos.begin(), firstParentOligoOiIter), firstParent, alreadyUsed);
             auto overlapSuccSecondParent = getSuccessorOverlap(std::distance(secondParent.oligos.begin(), secondParentOligoOiIter), secondParent, alreadyUsed);
-            
+
             // if no predecessor available take best one in all range
             if (overlapPreFirstParent == -1 && overlapPreSecondParent == -1)
             {
@@ -196,19 +201,19 @@ void GeneticISBH::computeSolution()
                 if (firstParentPairPre.first > secondParentPairPre.first)
                     finalPair = firstParentPairPre;
                 else finalPair = secondParentPairPre;
-                child.oligos.push_back(*finalPair.second);
+                child.oligos.insert(child.oligos.begin(), *finalPair.second);
                 alreadyUsed[*finalPair.second] = true;
                 ofIndex = *finalPair.second;
             }
             else if (overlapPreFirstParent > overlapPreSecondParent)
             {
-                child.oligos.push_back(*(firstParentOligoOfIter - 1));
+                child.oligos.insert(child.oligos.begin(), *(firstParentOligoOfIter - 1));
                 alreadyUsed[*(firstParentOligoOfIter - 1)] = true;
                 ofIndex = *(firstParentOligoOfIter - 1);
             }
             else
             {
-                child.oligos.push_back(*(secondParentOligoOfIter - 1));
+                child.oligos.insert(child.oligos.begin(), *(secondParentOligoOfIter - 1));
                 alreadyUsed[*(secondParentOligoOfIter - 1)] = true;
                 ofIndex = *(secondParentOligoOfIter - 1);
             }
@@ -239,10 +244,16 @@ void GeneticISBH::computeSolution()
                 alreadyUsed[*(secondParentOligoOiIter + 1)] = true;
                 oiIndex = *(secondParentOligoOiIter + 1);
             }
-            //WORK IN PROGRESS
         }
-        ///
+        //add child to temporary population
+        newPopulation.push_back(child);
     }
+    //take best parents (already sorted)
+    for (auto i = 0; i <= population.size() * 0.1; ++i)
+    {
+        newPopulation.push_back(this->population[i]);
+    }
+    this->population = newPopulation;
 }
 
 GeneticISBH::GeneticISBH()
