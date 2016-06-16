@@ -1,13 +1,15 @@
 #include <iostream>
+#include <numeric>
+#include <chrono>
 
 #include "graph.hpp"
 #include "dna_sequence.hpp"
 #include "dna_oligonucleotides.hpp"
 #include "genetic_isbh.h"
-#include <numeric>
+
 
 const int K_MER_LENGTH = 5;
-const int DNA_LENGTH = 600;
+const int DNA_LENGTH = 400;
 const int DNA_TEMPERATURE = 28;
 const double NEGATIVE_ERRORS_RATIO = 0.01;
 
@@ -55,12 +57,18 @@ int main(int argc, const char * argv[])
     auto genetic_isbh = new GeneticISBH();
     genetic_isbh->loadOligoMap(degen_oligo_map, DNA_LENGTH);
     genetic_isbh->loadFirstOligo(oligo);
+
+    auto start = std::chrono::system_clock::now();
     auto solution = genetic_isbh->computeSolution();
+    auto end = std::chrono::system_clock::now();
+    auto elapsed = std::chrono::duration_cast<std::chrono::duration<double> >(end - start).count();;
+    std::cout << "Elapsed time of computing solution: " << elapsed << std::endl;
+
     auto leven = levenshtein_distance(dna_loader->getDna(DNA_LENGTH), solution);
     //std::cout << dna_loader->getDna(DNA_LENGTH) << std::endl;
     //std::cout << solution << std::endl;
     std::cout << "Levensthein distance: " << leven << std::endl;
-    std::cout << "Levensthein distance in %: " <<1 - 2 * leven / double(DNA_LENGTH + solution.size()) << std::endl;
+    std::cout << "Levensthein distance in %: " <<(1 - 2 * leven / double(DNA_LENGTH + solution.size())) * 100.0 << std::endl;
 
     Graph* graph = new Graph(oligo_map);
     /*
