@@ -1,5 +1,5 @@
 #include "dna_sequence.hpp"
-
+#include <iostream>
 
 
 void DnaSequence::loadDnaFromFile(const std::string & name)
