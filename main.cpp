@@ -5,11 +5,10 @@
 #include "graph.hpp"
 #include "dna_sequence.hpp"
 #include "dna_oligonucleotides.hpp"
-#include "genetic_isbh.h"
-
+#include "genetic_isbh.hpp"
 
 const int K_MER_LENGTH = 5;
-const int DNA_LENGTH = 400;
+const int DNA_LENGTH = 100;
 const int DNA_TEMPERATURE = 28;
 const double NEGATIVE_ERRORS_RATIO = 0.01;
 
@@ -70,12 +69,9 @@ int main(int argc, const char * argv[])
     std::cout << "Levensthein distance: " << leven << std::endl;
     std::cout << "Levensthein distance in %: " <<(1 - 2 * leven / double(DNA_LENGTH + solution.size())) * 100.0 << std::endl;
 
-    Graph* graph = new Graph(oligo_map);
-    /*
-    Graph* graph = new Graph("a_long_long_long_time", K_MER_LENGTH);
-    auto path = graph->eulerianPath();
-    for (auto &item : path)
-        printf("%s,", item->value().c_str());
-    */
+    Graph* graph = new Graph(*dna_scattered, false);
+	auto path = graph->getPath();
+	for (auto item : path)
+		printf("%s,", item.c_str());
     return 0;
 }

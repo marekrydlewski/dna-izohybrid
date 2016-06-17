@@ -1,0 +1,63 @@
+\documentclass{article} 
+\usepackage{polski}
+\usepackage[utf8]{inputenc} 
+\usepackage[OT4]{fontenc} 
+\usepackage{graphicx,color}
+\usepackage{url} 
+\usepackage[pdftex,hyperfootnotes=false,pdfborder={0 0 0}]{hyperref} 
+\usepackage{indentfirst}
+
+\title{Algorytmy izotermicznego sekwencjonowania przez hybrydyzację}
+%\date{October 31, 2014}%
+\author{ \\ Piotr Kurzawa (117245) \\ Marek Rydlewski (117214)}
+
+\begin{document}
+
+\maketitle
+
+\vspace{3ex}
+
+\tableofcontents
+
+\newpage
+
+\section{Wstęp}
+
+Celem projektu było opracowanie algorytmów izotermicznego sekwencjonowania przez hybrydyzację (ISBH). 
+
+%Błędy negatywne - ISBH izotermiczne sekwencjonowanie (jeden rodzaj błędu)%
+
+%0, 1, {2, 3}, {4, 5}, wiele%
+
+Program został napisany w języku C++11 i był testowany na platformach Windows (w środowisku Visual Studio 2015) oraz OS X (z użyciem komulatora Apple LLVM w wersji 7.3.0). 
+
+\section{Algorytm dokładny}
+
+Algorytm dokładny jest chujowy i wymaga poprawek, yes is. 
+
+Polega on mniej więcej na tym, że usłyszeliśmy od innej grupy rzekomo żydowski sposób, jakim było tworzenie grafu z wagami (równych \textit{overlapowi} między dwoma połączonych w grafie oligo), a następnie potraktowanie go zmodyfikowanym algorytmem DFS. Co dziwne, okazało się że wszystkie inne grupy mają niemal identyczne rozwiązanie tego problemu, więc może wyjątkowo tutaj żaden żyd nie grzebał, tylko jest to typowa polacka robacka metoda rozwiązania tego problemu.
+
+Uważny czytelnik od razu stwierdzi, że rozwiązanie tego problemu trąci trochę rozwiązaniem problemu komiwojażera. Tak dokładnie jest, nawet DFS jest żywcem skopiowany z algorytmy.ork.
+
+Algorytm został przetestowany dla jednego przykładowego spektrum pochodzącego z pracy naukowej J.Błażewicza [potrzebne żródło] i dawał radę.
+
+\subsection{Skuteczność}
+
+Algorytm został przetestowany na jednym przykładzie i doskonale poradził sobie z tym jakże trudnym problemem. W związku z tym śmiało możemy przyjąć, że algorytm jest w 100\% skuteczny. Taki powinien być algorytm dokładny.
+
+\subsection{Złożoność}
+
+Podobnie jak problem komiwojażera, dokładny algorytm sekwencjonowania jest problemem NP-trudnym i nie nadaje się do analizy dłuższych spektrum, bo zanim by ta analiza się skończyła, to dawno byśmy już spadli z rowerka.
+
+\section{Algorytm przybliżony}
+
+\subsection{Skuteczność}
+
+\subsection{Złożoność}
+
+\section{Testy}
+
+\section{Podsumowanie}
+
+\end{document}
+

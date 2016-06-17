@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClCompile Include="dna_oligonucleotides.cpp" />
     <ClCompile Include="dna_sequence.cpp" />
+    <ClCompile Include="edge.cpp" />
     <ClCompile Include="genetic_isbh.cpp" />
     <ClCompile Include="graph.cpp" />
     <ClCompile Include="main.cpp" />
@@ -156,7 +157,8 @@
   <ItemGroup>
     <ClInclude Include="dna_oligonucleotides.hpp" />
     <ClInclude Include="dna_sequence.hpp" />
-    <ClInclude Include="genetic_isbh.h" />
+    <ClInclude Include="edge.h" />
+    <ClInclude Include="genetic_isbh.hpp" />
     <ClInclude Include="graph.hpp" />
     <ClInclude Include="individual.hpp" />
     <ClInclude Include="node.hpp" />

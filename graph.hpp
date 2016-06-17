@@ -6,31 +6,30 @@
 #include <tuple>
 #include <map>
 #include <algorithm>
+#include <stack>
+#include <vector>
 
 #include "node.hpp"
+#include "dna_oligonucleotides.hpp"
 
 class Graph {
 private:
-    int nsemi = 0, nbal = 0, nneither = 0;
-    Node *head, *tail;
-    std::vector<std::string *> chop(std::string data, int k); // to delete
+	std::map<std::string, Node*> nodes;
 
-    std::vector<Node*> tour;
-    std::map<std::string, Node*> nodes;
-    std::map<Node*,std::vector<Node*>*> G, g;
+	std::stack<Node*> stack;
+	std::map<Node*, int> visited;
 
-    bool hasEulerianPath() { return nneither == 0 && nsemi == 2; }
-    bool hasEulerianCycle() { return nneither == 0 && nsemi == 0; }
-    bool isEulerian() { return hasEulerianCycle() || hasEulerianPath(); }
-    void visit(Node *node);
-
-    Node* getOrCreate(std::string value);
-    bool endsWith(std::string const &value, std::string const &ending);
-    bool startsWith(std::string const &value, std::string const &ending);
+	Node* getOrCreate(std::string value, int count);
+	bool endsWith(std::string const &value, std::string const &ending);
+	bool startsWith(std::string const &value, std::string const &ending);
+	void dealWithOligo(Node*, Node*, bool);
+	bool allVisited();
+	void DFS(Node * node);
 public:
-    Graph(std::string data, int k);
-    Graph(std::map<std::string, int> oligoMap);
-    std::vector<Node*> eulerianPath();
+	//Graph(std::string data, int k);
+	Graph(DnaOligonucleotides dna, bool);
+	std::vector<std::string> getPath();
+	//std::vector<Node*> eulerianPath();
 };
 
 #endif /* graph_hpp */

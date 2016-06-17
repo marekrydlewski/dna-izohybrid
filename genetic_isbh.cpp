@@ -1,4 +1,4 @@
-#include "genetic_isbh.h"
+#include "genetic_isbh.hpp"
 #include <algorithm>
 #include <functional>
 #include <random>
