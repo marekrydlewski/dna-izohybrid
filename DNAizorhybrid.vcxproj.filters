@@ -30,6 +30,12 @@
     <ClCompile Include="dna_oligonucleotides.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="genetic_isbh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="edge.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graph.hpp">
@@ -45,6 +51,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="oligo_numbers.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="individual.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="genetic_isbh.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="edge.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
