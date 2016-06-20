@@ -48,9 +48,9 @@ int levenshtein_distance(const std::string& s1, const std::string& s2)
 
 int main(int argc, const char* argv[])
 {
-    std::vector<double> errors_ratio = {0.00, 0.05, 0.1, 0.15, 0.20, 0.30};
-    std::vector<int> dna_length = {100, 200, 400, 600, 800, 1200, 1600};
-    std::vector<int> dna_temp = {20, 30, 40, 50};
+    std::vector<double> errors_ratio = {0.00, 0.5, 0.10, 0.15 };
+    std::vector<int> dna_length = { 1600};
+    std::vector<int> dna_temp = {20, 30, 40};
     std::ofstream outfile;
     outfile.open("test.csv", std::ios::app);
     outfile << "Length" << ";" << "Temp" << ";" << "Error" << ";" << "Time" << ";" << "Score" << "\n";
@@ -83,7 +83,7 @@ int main(int argc, const char* argv[])
                 //std::cout << dna_loader->getDna(DNA_LENGTH) << std::endl;
                 //std::cout << solution << std::endl;
                 std::cout << "Levensthein distance: " << leven << std::endl;
-                auto leven_percentege = (2 * leven / double(DNA_LENGTH + solution.size())) * 100.0;
+                auto leven_percentege = (1 - 2 * leven / double(DNA_LENGTH + solution.size())) * 100.0;
                 std::cout << "Levensthein distance in %: " << leven_percentege << std::endl;
                 outfile << elapsed << ";" << leven_percentege << "\n";
             }

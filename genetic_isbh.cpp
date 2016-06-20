@@ -178,7 +178,7 @@ std::string GeneticISBH::createStringSolution(const Individual& individual)
         auto s1 = oligoSpectrum[individual.oligos[i -1]];
         auto s2 = oligoSpectrum[individual.oligos[i]];
         int overlap = getOverlap(s1, s2);
-        //if (solution.size() + s1.substr(overlap).size() > dnaSize) break;
+        if (solution.size() + s1.substr(overlap).size() > dnaSize) break;
         solution += s1.substr(overlap);
     }
     return solution;
@@ -227,7 +227,8 @@ std::string GeneticISBH::computeSolution()
     //main loop
     for (auto j = 0; j < 50; ++j)
     {
-        std::cout << "Genetic Algorithm iter: " << j << " from 50" << std::endl;
+        if(dnaSize > 600)
+            std::cout << "Genetic Algorithm iter: " << j << " from 50" << std::endl;
         std::vector<Individual> newPopulation;
         // crossover 3.1 && 3.2
         for (auto i = 0; i <= numberOfBestParents; ++i)
