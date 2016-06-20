@@ -1,6 +1,7 @@
 #include <iostream>
 #include <numeric>
 #include <chrono>
+#include <fstream>
 
 #include "graph.hpp"
 #include "dna_sequence.hpp"
@@ -52,43 +53,41 @@ int main(int argc, const char* argv[])
     std::vector<int> dna_temp = {20, 30, 40, 50};
     std::ofstream outfile;
     outfile.open("test.csv", std::ios::app);
+    outfile << "Length" << ";" << "Temp" << ";" << "Error" << ";" << "Time" << ";" << "Score" << "\n";
     for (auto& length : dna_length)
     {
         for(auto& temp: dna_temp)
         {
-            for(auto& error : errors_ratio)
+            for(auto error : errors_ratio)
             {
-                
+                outfile << length << ";" << temp << ";" << error << ";";
+                std::cout <<"length: "<< length << " temp: " << temp << " error: " << error << std::endl;
+                auto dna_loader = new DnaSequence("dna-data.txt");
+                auto dna_scattered = new DnaOligonucleotides(dna_loader->getDna(length), temp);
+                auto oligo = dna_scattered->getFirstOligo();
+                std::cout << "The first oligo is: " << oligo << std::endl;
+                auto oligo_map = dna_scattered->getOligoMap();
+                //for (auto& t : oligo_map)
+                //    std::cout << t.first << " " << t.second << std::endl;
+                auto degen_oligo_map = dna_scattered->getOligoMapStructuredWithNegativeErrors(NEGATIVE_ERRORS_RATIO);
+                auto genetic_isbh = new GeneticISBH();
+                genetic_isbh->loadOligoMap(degen_oligo_map, DNA_LENGTH);
+                genetic_isbh->loadFirstOligo(oligo);
+
+                auto start = std::chrono::system_clock::now();
+                auto solution = genetic_isbh->computeSolution();
+                auto end = std::chrono::system_clock::now();
+                auto elapsed = std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
+                std::cout << "Elapsed time of computing solution: " << elapsed << std::endl;
+                auto leven = levenshtein_distance(dna_loader->getDna(DNA_LENGTH), solution);
+                //std::cout << dna_loader->getDna(DNA_LENGTH) << std::endl;
+                //std::cout << solution << std::endl;
+                std::cout << "Levensthein distance: " << leven << std::endl;
+                auto leven_percentege = (2 * leven / double(DNA_LENGTH + solution.size())) * 100.0;
+                std::cout << "Levensthein distance in %: " << leven_percentege << std::endl;
+                outfile << elapsed << ";" << leven_percentege << "\n";
             }
         }
     }
-    auto dna_loader = new DnaSequence("dna-data.txt");
-    auto dna_scattered = new DnaOligonucleotides(dna_loader->getDna(DNA_LENGTH), DNA_TEMPERATURE);
-    auto oligo = dna_scattered->getFirstOligo();
-    std::cout << "The first oligo is: " << oligo << std::endl;
-    auto oligo_map = dna_scattered->getOligoMap();
-    for (auto& t : oligo_map)
-        std::cout << t.first << " " << t.second << std::endl;
-    auto degen_oligo_map = dna_scattered->getOligoMapStructuredWithNegativeErrors(NEGATIVE_ERRORS_RATIO);
-    auto genetic_isbh = new GeneticISBH();
-    genetic_isbh->loadOligoMap(degen_oligo_map, DNA_LENGTH);
-    genetic_isbh->loadFirstOligo(oligo);
-
-    auto start = std::chrono::system_clock::now();
-    auto solution = genetic_isbh->computeSolution();
-    auto end = std::chrono::system_clock::now();
-    auto elapsed = std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();;
-    std::cout << "Elapsed time of computing solution: " << elapsed << std::endl;
-
-    auto leven = levenshtein_distance(dna_loader->getDna(DNA_LENGTH), solution);
-    //std::cout << dna_loader->getDna(DNA_LENGTH) << std::endl;
-    //std::cout << solution << std::endl;
-    std::cout << "Levensthein distance: " << leven << std::endl;
-    std::cout << "Levensthein distance in %: " << (2 * leven / double(DNA_LENGTH + solution.size())) * 100.0 << std::endl;
-
-    Graph* graph = new Graph(*dna_scattered, false);
-    auto path = graph->getPath();
-    for (auto item : path)
-        printf("%s,", item.c_str());
     return 0;
 }
