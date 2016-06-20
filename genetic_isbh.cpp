@@ -178,7 +178,7 @@ std::string GeneticISBH::createStringSolution(const Individual& individual)
         auto s1 = oligoSpectrum[individual.oligos[i -1]];
         auto s2 = oligoSpectrum[individual.oligos[i]];
         int overlap = getOverlap(s1, s2);
-        if (solution.size() + s1.substr(overlap).size() > dnaSize) break;
+        //if (solution.size() + s1.substr(overlap).size() > dnaSize) break;
         solution += s1.substr(overlap);
     }
     return solution;
@@ -246,8 +246,8 @@ std::string GeneticISBH::computeSolution()
                 auto secondParentOligoIter = std::find(secondParent.oligos.begin(), secondParent.oligos.end(), oiIndex);
 
                 // successor
-                auto firstDis = std::distance(firstParent.oligos.begin(), firstParentOligoIter);
-                auto secondDis = std::distance(secondParent.oligos.begin(), secondParentOligoIter);
+                //auto firstDis = std::distance(firstParent.oligos.begin(), firstParentOligoIter);
+                //auto secondDis = std::distance(secondParent.oligos.begin(), secondParentOligoIter);
                 auto overlapSuccFirstParent = getSuccessorOverlap(std::distance(firstParent.oligos.begin(), firstParentOligoIter), firstParent, alreadyUsed);
                 auto overlapSuccSecondParent = getSuccessorOverlap(std::distance(secondParent.oligos.begin(), secondParentOligoIter), secondParent, alreadyUsed);
 
@@ -260,9 +260,9 @@ std::string GeneticISBH::computeSolution()
                     if (firstParentPair.first > secondParentPair.first)
                         finalPair = firstParentPair;
                     else finalPair = secondParentPair;
-                    bool flag = false;
-                    if (std::find(child.oligos.begin(), child.oligos.end(), *finalPair.second) != child.oligos.end())
-                        flag = true;
+                    //bool flag = false;
+                    //if (std::find(child.oligos.begin(), child.oligos.end(), *finalPair.second) != child.oligos.end())
+                    //    flag = true;
 
                     child.oligos.push_back(*finalPair.second);
                     alreadyUsed[*finalPair.second] = true;
@@ -271,9 +271,9 @@ std::string GeneticISBH::computeSolution()
                 else if (overlapSuccFirstParent > overlapSuccSecondParent)
                 {
 
-                    bool flag = false;
-                    if (std::find(child.oligos.begin(), child.oligos.end(), *(firstParentOligoIter + 1)) != child.oligos.end())
-                        flag = true;
+                    //bool flag = false;
+                    //if (std::find(child.oligos.begin(), child.oligos.end(), *(firstParentOligoIter + 1)) != child.oligos.end())
+                    //    flag = true;
                     oiIndex = *(firstParentOligoIter + 1);
                     child.fitness = computeFitness(child);
                     child.oligos.push_back(oiIndex);
@@ -282,9 +282,9 @@ std::string GeneticISBH::computeSolution()
                 }
                 else
                 {
-                    bool flag = false;
-                    if (std::find(child.oligos.begin(), child.oligos.end(), *(secondParentOligoIter + 1)) != child.oligos.end())
-                        flag = true;
+                    //bool flag = false;
+                    //if (std::find(child.oligos.begin(), child.oligos.end(), *(secondParentOligoIter + 1)) != child.oligos.end())
+                    //    flag = true;
                     oiIndex = *(secondParentOligoIter + 1);
                     child.oligos.push_back(oiIndex);
                     alreadyUsed[oiIndex] = true;
