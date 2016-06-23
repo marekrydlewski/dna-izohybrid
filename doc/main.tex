@@ -51,9 +51,10 @@ Podobnie jak problem komiwojażera, dokładny algorytm sekwencjonowania jest pro
 
 \section{Algorytm przybliżony}
 \subsection{Ogólne założenia}
-W rozwiązaniu przybliżonym zdecydowaliśmy się na skorzystanie z algorytmu ewolucyjnego, a konkretnie z algorytmu genetycznego. Ta heurstyka znana jest ze swojej skuteczności w rozwiązywaniu wielu problemów obliczeniowo trudnych. Zdecydowaliśmy się na taki algorytm również dlatego że posiadamy doświadczenie w dość skutecznej implementacji takich heurstyk oraz znaleźliśmy w literaturze fachowej wiele przykładów na jego efektywność właśnie w problematyce sekwencjowania DNA. Ogólna idea programu jest prosta - losowana jest pewna populacja początkowa, która poddawana jest selekcji (ocenie). Najlepsze osobniki biorą udział w reprodukcji - genotypy rodziców są krzyżowane, a na otrzymanym potomstwie przeprowadzana jest mutacja, która ma za zadanie zwiększyć różnorodność i wyjść z ewentualnego optimum lokalnego.
+W rozwiązaniu przybliżonym zdecydowaliśmy się na skorzystanie z algorytmu ewolucyjnego, a konkretnie z algorytmu genetycznego. Ta heurstyka znana jest ze swojej skuteczności w rozwiązywaniu wielu problemów obliczeniowo trudnych. Zdecydowaliśmy się na taki algorytm również dlatego że posiadamy doświadczenie w dość skutecznej implementacji takich heurstyk oraz znaleźliśmy w literaturze fachowej wiele przykładów na jego efektywność właśnie w problematyce sekwencjowania DNA. Ogólna idea programu jest prosta - losowana jest pewna populacja początkowa, która poddawana jest selekcji (ocenie). Najlepsze osobniki biorą udział w reprodukcji - genotypy rodziców są krzyżowane, a na otrzymanym potomstwie przeprowadzana jest mutacja, która ma za zadanie zwiększyć różnorodność i wyjść z ewentualnego optimum lokalnego. Jako wejście algorytmu przyjmujemy mapę gdzie klucze to kolejne oligonukletody w postaci stringów a wartości to odpowiednie klasy, zaimplementowane w postaci typu wyliczeniowego.
 \subsection{Opis algorytmu}
 Nasz algorytm został zaprojektowany do radzenie sobie z błędami negatywnymi, ale krótkie eksperymenty pokazały że radzi sobie również z problematyką sekwencjowania z błędami obu rodzajów.
+Algorytm tworzy spektrum oligonukleotydów wykorzystując wejściową mapę -  do spektrum zaliczamy górną granicę danej klasy - tym sposobem gwarantujemy że nie pominiemy żadnego oligo w naszym rozwiązaniu. Jak poradziliśmy sobie z błędami negatywnymi opiszemy później (w punkcie mutacje). 
 W naszym algorytmie funkcja oceny polega na skonstruowaniu wynikowego DNA stosując maksymalny overlapping przyległych oligonukleotydów w wektorze. Im więcej oligonukleotydów uda nam się zmieścić nie przekraczając długości n - długości DNA tym lepsza ocena rozwiązania. Uważny czytelnik zauważy że początkowe rozwiązania mogą przekraczać długość n co w problemie sekwencjowania z błędami negatywnymi jest dość nietypowe, jednakże taka jest natura losowych początkowych rozwiązań. Warto zwrócić uwagę, ze bardzo szybko algorytm redukuje długość rozwiązania poniżej n. Aby nie pozwolić na zbytnie skrócenie rozwiązania, zwłaszcza przy większej ilości błędów w fazie mutacji stosujemy dodanie losowych oligonukleotydów w takiej sytuacji. Finalnym rozwiązaniem jest ciąg oligonukleotydów najlepszego osobnika.
 \begin{enumerate}
 \item Wylosowanie populacji początkowej
@@ -82,8 +83,20 @@ W naszym algorytmie funkcja oceny polega na skonstruowaniu wynikowego DNA stosuj
 \item Wybieramy dwa oligonukletody i zamieniamy je miejscami. Taki zabieg pozwala zwiększyć nam przeszukiwaną przestrzeń rozwiązań.
 \item Jeśli długość rozwiązania spadła poniżej n oznacza to że wykorzystaliśmy wszystkie oligonukleotydy a niezgodność z ciągiem wejściowym będzie spowodowana obecnością błędów negatywnych. W takim wypadku zwiększamy spektrum zwiększając poziom losowego oligonukleotydu o jedną klasę.
 \end{itemize}	
-\item Kroki dotyczące oceny, krzyżowania oraz mutacji powtarzamy zadaną ilość razy zależną od rozmiaru spektrum również wyznaczoną eksperymentalnie \ldots
-\end{enumerate}  
+\item Kroki dotyczące oceny, krzyżowania oraz mutacji powtarzamy zadaną ilość razy zależną od rozmiaru spektrum również wyznaczoną eksperymentalnie.
+\end{enumerate}
+\subsection{Parametry algorytmu}
+Wartości wyznaczyliśmy doświadczalnie, co zaprezentowaliśmy w sekcji Testy
+Poszególne wartości parametrów:
+\begin{itemize}
+\item ilość iteracji algorytmu = (Temperatura * 2 > 50)? Temperatura * 2 : 50
+\\Takie podejście pozwala nam dla dla dużych temperatur dostosować odpowiednio dużą liczbę iteracji.
+\item odsetek najlepszych rodziców = ogólna liczba rodziców * 0.5
+\item liczba dzieci = ogólna liczba rodziców * 0.5
+\\Jak widać utrzymujemy w ten sposób stały rozmiar populacji co czyni algorytm efektywnym dla stosunkowo dużych rozmiarów instancji.
+\item liczba mutacji = 0.01 * rozmiar spektrum * rozmiar populacji * 0.5
+\\Podobny wzór znaleźliśmy w literaturze fachowej, bo drobnych modyfikacjach okazał idealnie się wpasowywać w nasze potrzeby.
+\end{itemize}
 \subsection{Skuteczność}
 
 \subsection{Złożoność}
