@@ -64,9 +64,24 @@ W naszym algorytmie funkcja oceny polega na skonstruowaniu wynikowego DNA stosuj
 \item Ocena i wybór najlepszych osobników
 \begin{itemize}
 \item Wybieramy najlepsze osobniki i kierujemy je do reprodukcji, odsetek premiowanych osobników wyznaczyliśmy eksperymentalnie.
-\item 
 \end{itemize}
-\item 
+\item Krzyżowanie - wybieramy losowe pary z najlepszych rodziców. Odsetek potomków wyznaczamy doświadczalnie.
+\begin{itemize}
+\item Kolejne oligonukleotydy dziecka dobieramy w myśl zasady:
+\begin{enumerate}
+\item Wyszukujemy oligonukleotyd w obu rodzicach
+\item Oceniamy overlapping między tym oligonukleotydem a następnym oligo w rodzicu
+\item Porównujemy i wybieramy oligonukleotyd o większym overlappingu, w przypadku remisu wyboru dokonujemy losowo. Fakt wybrania oligo zaznaczamy w tablicy oligonukleotodyów już zużytych.
+\item Jeśli oligonukleotyd nie ma następnika, lub następnik został już użyty wyszykujemy inny niewykorzystany jeszcze oligonukleotyd rodzica o jak największym overlappingu.
+\end{enumerate}
+\item Jak widać zastosowaliśmy tutaj krzyżowanie wielopunktowe
+\end{itemize}
+\item Mutacje - aby uniknąć wpadnięcia w lokalne optimum i zwiększyć przeszukiwaną przestrzeń rozwiązań stosujemy mutacje trzech rodzajów
+\begin{itemize}
+\item Wyszukujemy oligonukleotyd który ma najmniejszy overlapping z obu stron tj. za równo ze strony następnika jak i poprzednika. Następnie zamieniamy miejscami ten oligonukleotyd z sąsiadem - to czy zamienimy go z następnikiem czy poprzednikiem zależy który ma mniejszy swój sumaryczny overlapping (wybieramy tego gorszego). Zastosowanie takich mutacji pozwala na eliminację potencjalnych "słabych podciągów" w rozwiązaniu
+\item Wybieramy dwa oligonukletody i zamieniamy je miejscami. Taki zabieg pozwala zwiększyć nam przeszukiwaną przestrzeń rozwiązań.
+\item Jeśli długość rozwiązania spadła poniżej n oznacza to że wykorzystaliśmy wszystkie oligonukleotydy a niezgodność z ciągiem wejściowym będzie spowodowana obecnością błędów negatywnych. W takim wypadku zwiększamy spektrum zwiększając poziom losowego oligonukleotydu o jedną klasę.
+\end{itemize}	
 \item Kroki dotyczące oceny, krzyżowania oraz mutacji powtarzamy zadaną ilość razy zależną od rozmiaru spektrum również wyznaczoną eksperymentalnie \ldots
 \end{enumerate}  
 \subsection{Skuteczność}
