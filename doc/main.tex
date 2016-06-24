@@ -33,21 +33,36 @@ Program został napisany w języku C++11 i był testowany na platformach Windows
 
 \section{Algorytm dokładny}
 
-Algorytm dokładny jest chujowy i wymaga poprawek, yes is. 
+Algorytm ten okazał się typowym problemem grafowym - co ciekawe, mającym wiele wspólnego z znanym powszechnie \textit{problemem komiwojażera}. W związku z tym opracowanie oraz implementacja algorytmu dokładnego nie należało do wybitnie wymagających zadań w tym projekcie, gdyż podobne problemy rozwiązywaliśmy już w poprzednich latach studiów (nie mówiąc już o ogromie literatury traktującej o tego typu problemach).
 
-Polega on mniej więcej na tym, że usłyszeliśmy od innej grupy rzekomo żydowski sposób, jakim było tworzenie grafu z wagami (równych \textit{overlapowi} między dwoma połączonych w grafie oligo), a następnie potraktowanie go zmodyfikowanym algorytmem DFS. Co dziwne, okazało się że wszystkie inne grupy mają niemal identyczne rozwiązanie tego problemu, więc może wyjątkowo tutaj żaden żyd nie grzebał, tylko jest to typowa polacka robacka metoda rozwiązania tego problemu.
+Kluczową elementem tego algorytmu było wyznaczanie \textit{overlapu}, czyli długości części wspólnej dwóch dowolnych nukleotydów dostępnych w spektrum. Na podstawie tej informacji tworzyliśmy odpowiednie połączenia między dwoma nukleotydami w grafie.
 
-Uważny czytelnik od razu stwierdzi, że rozwiązanie tego problemu trąci trochę rozwiązaniem problemu komiwojażera. Tak dokładnie jest, nawet DFS jest żywcem skopiowany z algorytmy.ork.
+Po wygenerowaniu grafu problem sprowadzał się do wyszukania optymalnej ścieżki za pomocą algorytmu przechodzenia grafu w głąb.
 
-Algorytm został przetestowany dla jednego przykładowego spektrum pochodzącego z pracy naukowej J.Błażewicza [potrzebne żródło] i dawał radę.
+\subsection{Opis}
+
+Nasze rozwiązanie dzieli się na dwa etapy: generowania grafu na podstawie spektrum oraz poszukiwanie optymalnej sekwencji nukleotydów za pomocą przeszukiwania grafu.
+
+Na początku pierwszego etapu każdy element spektrum dodajemy do listy wierzchołków. Każdy wierzchołek zawiera wartość nukleotydu, ilość powtórzeń w spektrum oraz listę krawędzi, które wychodzą z danego wierzchołka (domyślnie jest ona pusta). Dla uproszczenia założyliśmy, że w przypadku wielokrotnego występowania danego nukleotydu nie będziemy dodawać nowego wierzchołka do grafu, a jedynie zwiększymy licznik wystąpień w wierzchołku już istniejącym. 
+
+Następnie spośród wszystkich elementów dostępnych w spektrum generujemy pary. Dla każdej z nich uruchamiamy procedurę wyliczającą \textit{overlap} między nimi. Jeżeli istnieje jakikolwiek część wspólna między nimi, do wierzchołka źródłowego dodajemy krawędź o wadze równej wyliczonego \textit{overlapu} oraz danym wierzchołkiem docelowym. 
+
+Drugi etap stanowi zmodyfikowaną odmianę algorytmu \textit{DFS}. Początkowo na stosie ustawiamy wierzchołek początkowy (czyli znany nam pierwszy nukleotyd w sekwencji DNA), a następnie rekurencyjnie przechodzimy po wszystkich jego sąsiadach. Fakt odwiedzin danego wierzchołka oznaczamy w tablicy \textit{visited} będącym słownikiem, którego kluczem jest wskaźnik do wierzchołka, a wartością ilość powtórzeń danego nukleotydu w spektrum. W przypadku odwiedzin dekrementujemy licznik - jeżeli osiągnie on wartość zero, uznajemy wierzchołek za już odwiedzony. 
+
+Algorytm przeszukiwania potrafi zwrócić więcej niż jedną ścieżkę, dlatego też w tym miejscu dokonaliśmy pewnego uproszczenia i zwracaliśmy pierwszą odnalezioną sekwencję oraz przerywaliśmy rekurencję. 
 
 \subsection{Skuteczność}
 
-Algorytm został przetestowany na jednym przykładzie i doskonale poradził sobie z tym jakże trudnym problemem. W związku z tym śmiało możemy przyjąć, że algorytm jest w 100\% skuteczny. Taki powinien być algorytm dokładny.
+Z racji naszego uproszczenia nasz algorytm w teorii nie powinien być skuteczny w stu procentach, niemniej jednak w trakcie testów dana sekwencja okazywała się sekwencją optymalną. 
+
+Wprowadzenie stuprocentowej skuteczności wiązałoby się z modyfikacją algorytmu przeszukiwania wszerz, co dawałoby dodatkowy narzut czasowy. 
 
 \subsection{Złożoność}
 
-Podobnie jak problem komiwojażera, dokładny algorytm sekwencjonowania jest problemem NP-trudnym i nie nadaje się do analizy dłuższych spektrum, bo zanim by ta analiza się skończyła, to dawno byśmy już spadli z rowerka.
+W tym miejscu wychodzi największa wada tego algorytmu. Izotermiczne sekwencjonowanie z błędami negatywnymi (podobnie jak problem komiwojażera) należy do problemów NP-zupełnych, co mniej więcej oznacza tyle, że (nawet biorąc pod uwagę nasze uproszczenie) przy większych instancjach problemów będzie istniało zagrożenie, że ani my, ani nawet nasi potomkowie nie doczekają się wyniku. 
+
+Dlatego też powyższy algorytm bardzo dobrze radzi sobie z mniejszymi instancjami, w przypadku których czas realizacji tego algorytmu należy jeszcze do "akceptowalnych". W przypadku większych spektrum pozostaje już tylko wyłącznie korzystanie z algorytmów przybliżonych, również ujętych w tej pracy.
+
 
 \section{Algorytm przybliżony}
 \subsection{Ogólne założenia}
