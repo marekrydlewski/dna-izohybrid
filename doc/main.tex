@@ -7,6 +7,8 @@
 \usepackage[pdftex,hyperfootnotes=false,pdfborder={0 0 0}]{hyperref} 
 \usepackage{indentfirst}
 
+\graphicspath{ {images/} }
+
 \title{Algorytmy izotermicznego sekwencjonowania przez hybrydyzację}
 %\date{October 31, 2014}%
 \author{ \\ Piotr Kurzawa (117245) \\ Marek Rydlewski (117214)}
@@ -98,13 +100,16 @@ Poszególne wartości parametrów:
 \\Podobny wzór znaleźliśmy w literaturze fachowej, bo drobnych modyfikacjach okazał idealnie się wpasowywać w nasze potrzeby.
 \end{itemize}
 \subsection{Skuteczność}
-
+Skuteczność algorytmu w zależności od rozmiaru błędu, rozmiaru instancji oraz temperatury waha się w ogólności w przedziale od 55 do 85 procent. Algorytm dobrze radzi sobie z instancjami o różnych wielkościach i różnym rozmiarze błędu, kłopoty pojawią się przy dużej ilości błędów - 30 procent błedów powoduje znaczący spadek jakości rozwiązań.
 \subsection{Złożoność}
 Algorytm wykazuje wielomianową(kwadratową) złożoność obliczeniową co
 widać zresztą na przykładowym wykresie:
 
-Zakładając stałą liczbę iteracji głównej pętli na złożoność składają się:
+Nasz algorytm działał w rozsądnym czasie nawet dla instancji o rozmiarze 1600, dodatkowo warto zauważyć że bardzo łatwo byłoby go zrównoleglić.
 
+\includegraphics{genetic}
+
+Zakładając stałą liczbę iteracji głównej pętli na złożoność składają się:
 
 Krzyżowanie - pętla wykonywająca się tak długo aż dziecko będzie miało
 wszystkie oligonukleotydy rodziców - liczba oligo w spektrum jest zależna
@@ -112,15 +117,14 @@ od n - długości dna, a także od temperatury. Wszystkie kroki w pętli mają
 czas stały lub zależny liniowo od n np. znalezienie elementu w spektrum -
 a więc ogólna złożoność funkcji jest kwadratowa.
 
-
 Mutacje - liczba mutacji jest uzależniona od rozmiaru spektrum - złożoność liniowa. Wszystkie operacje występujące w funkcji mutacji również
 mają koszt liniowy np. koszt znalezienia najgorszego elementu. Również i tutaj ogólna złożoność jest zależna od kwadratu z n.
-        
-        
+           
 Losowanie początkowej populacji, generowanie chwilowego rozwiązania mają złożoność liniową.
 
+Wybranie najlepszych rodziców czyli de facto posortowanie całej populacji ma złożoność n*log(n) - stosujemy sortowanie szybkie - quicksort z biblioteki algorithm.
 
-Wybranie najlepszych rodziców czyli de facto posortowanie całej populacji ma złożoność n*log(n) - stosujemy sortowanie szybkie - quicksort z biblioteki algorithm .
+Co ciekawe wraz ze zwiększaniem temperatury rośnie, rośnie również czas wykonywania algorytmu co jest spowodowane trudniejszym dopasowywaniem oligonukleotydów do siebie - duży narzut ma tutaj krzyżowanie rodziców.
 
 \section{Testy}
 
