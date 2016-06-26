@@ -3,6 +3,7 @@
 Node::Node(std::string value, int count) {
 	this->_value = value;
 	this->_count = count;
+	this->edges = std::vector<Edge*>();
 }
 
 /*

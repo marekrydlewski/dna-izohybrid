@@ -4,6 +4,7 @@
 #include <string>
 #include <cstdlib>
 #include <vector>
+#include <set>
 
 #include "edge.h"
 
