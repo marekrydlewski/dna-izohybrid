@@ -77,8 +77,8 @@ int main(int argc, const char * argv[])
 int main(int argc, const char* argv[])
 {
     std::vector<double> errors_ratio = {0.00, 0.5, 0.10, 0.15 };
-	std::vector<int> dna_length = { 25 };
-    std::vector<int> dna_temp = { 40};
+	std::vector<int> dna_length = { 16 };
+    std::vector<int> dna_temp = { 20, 30, 40};
     std::ofstream outfile;
     outfile.open("test.csv", std::ios::app);
     outfile << "Length" << ";" << "Temp" << ";" << "Error" << ";" << "Time" << ";";

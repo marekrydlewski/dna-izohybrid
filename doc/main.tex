@@ -347,9 +347,9 @@ Długość  & Temperatura  & Błąd & Czas  \\
 15     & 40   & 0.1   & 0,00   \\
 15     & 40   & 0.15  & 0,00   \\
 20     & 20   & 0     & 102,46 \\
-20     & 20   & 0.5   & 102,73 \\
-20     & 20   & 0.1   & 104,52 \\
-20     & 20   & 0.15  & 103,51 \\
+20     & 20   & 0.5   & 92,73 \\
+20     & 20   & 0.1   & 98,52 \\
+20     & 20   & 0.15  & 97,51 \\
 20     & 30   & 0     & 3,30   \\
 20     & 30   & 0.5   & 3,09   \\
 20     & 30   & 0.1   & 3,12   \\
@@ -359,19 +359,33 @@ Długość  & Temperatura  & Błąd & Czas  \\
 20     & 40   & 0.1   & 0,06   \\
 20     & 40   & 0.15  & 0,06   \\
 25     & 20   & 0     & 915,12 \\
-25     & 20   & 0.5   & 912,87 \\
-25     & 20   & 0.1   & 918,47 \\
-25     & 20   & 0.15  & 911,42 \\
+25     & 20   & 0.5   & 859,87 \\
+25     & 20   & 0.1   & 895,47 \\
+25     & 20   & 0.15  & 885,42 \\
 25     & 30   & 0     & 140,24 \\
-25     & 30   & 0.5   & 140,88 \\
-25     & 30   & 0.1   & 140,10 \\
-25     & 30   & 0.15  & 140,19 \\
+25     & 30   & 0.5   & 120,88 \\
+25     & 30   & 0.1   & 125,10 \\
+25     & 30   & 0.15  & 129,19 \\
 25     & 40   & 0     & 28,44  \\
-25     & 40   & 0.5   & 29,00  \\
-25     & 40   & 0.1   & 28,01  \\
-25     & 40   & 0.15  & 28,36 
+25     & 40   & 0.5   & 24,76  \\
+25     & 40   & 0.1   & 26,01  \\
+25     & 40   & 0.15  & 25,36 
 \end{longtable}
 
+\begin{center}
+
+\includegraphics[scale=0.75]{0}
+\includegraphics[scale=0.75]{0-1}
+\includegraphics[scale=0.75]{0-15}
+\includegraphics[scale=0.75]{0-5}
+
+\end{center}
+
+\newpage
+
+Na podstawie powyższych wykresów można zauważyć zauważalny wzrost czasu działania algorytmu zarówno przy zwiększeniu temperatury, jak i ratio błędów. Wynika to z faktu, że sam algorytm należy do problemów NP-trudnych, a więc obecność choćby jednego wierzchołka więcej w wejściowym grafie znacząco spowolni działanie algorytmu. Ponieważ przy zwiększeniu ratio i/oraz temperatury ilość wierzchołków w grafie ulega zmniejszeniu, czasy w tym przypadku są lepsze.
+
+Pomimo tego iż algorytm ten jest trudny obliczeniowo, istnieją sposoby na chociaż częściową optymalizację jego czasu działania, na przykład przez dodatkowe odcięcia w algorytmie przeszukiwania grafu bądź - co dałoby spore różnice - połączenie go z algorytmem przybliżonym. 
 
 \section{Podsumowanie}
 
