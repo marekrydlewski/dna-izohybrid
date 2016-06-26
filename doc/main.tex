@@ -300,6 +300,23 @@ Długość  & Temperatura  & Błąd & Czas    & Wynik  \\
 1600   & 50   & 0,3   & 2200,93 & 55   
 \end{longtable}
 
+Efektywność algorytmu pomału maleje dla długich łańcuchów - jasne jest że trudniej skonstruować poprawny długi łańcuch. Oś y reprezentuje procent zgodności z oryginalną sentencją, a oś x długość odcinka DNA:
+
+
+\includegraphics{temp20err000}
+
+\includegraphics{temp40err015}
+
+\includegraphics{temp40err030}
+
+Poniższe wykresy obrazują wielomianową złożoność algorytmu, udaje nam się osiągać rozsądne czasy nawet dla dużych wielkości instancji. Oś y reprezentuje czas wyrażony w sekundach, a oś x długość odcinka DNA:
+
+\includegraphics{temp20err000time}
+
+\includegraphics{temp40err015time}
+
+\includegraphics{temp40err000time}
+
 \subsection{Algorytm dokładny}
 
 \begin{longtable}{c|c|c|c|c}
